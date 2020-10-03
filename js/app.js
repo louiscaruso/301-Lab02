@@ -1,62 +1,65 @@
 /* eslint-disable no-undef */
 'use strict';
 
-
-
-$(document).ready(function () {
-
-
-  // };
-
-  // }
-
-  // let hornsArray = [];
-  function Horn(item) {
-    this.image_url = item.image_url;
-    this.title = item.title;
-    this.description = item.description;
-    this.keyword = item.keyword;
-    this.horns = item.horns;
-
-    // hornsArray.push(this);
-
-
-  }
-
-  Horn.prototype.render = function () {
-    let $photoClone = $(' #photo-template').clone();
-    $('section').append($photoClone);
-    $photoClone.removeAttr('id');
-    $photoClone.attr('id', this.item);
-
-    $photoClone.find('h2').text(this.title);
-    $photoClone.find('img').attr('src', this.image_url);
-
-  };
-
-  // Horn.readJson = () => {
-  //   const ajaxSettings = {
-  //     method: 'get',
-  //     dataType: 'json'
-
-  //   };
+let $photoTemplate = $('#photo-template');
+let $box = $('#photo-box');
+let $dropbox = $('#dropbox');
 
 
 
-  $.ajax('./data/page-1.json')
-    .then(data => {
 
-      data.forEach(item => {
-
-        let horn = new Horn(item);
-
-        horn.render();
-
-
-      });
+function Horn(img, title, description, key, horns) {
+  this.img = img;
+  this.title = title;
+  this.description = description;
+  this.key = key;
+  this.horns = horns;
+}
+let keyword = [];
 
 
-    });
+$.ajax('./data/page-1.json').then(data => {
+  filterImage();
+  data.forEach(horn => {
+    let hornObject = new Horn(horn.image_url, horn.title, horn.description, horn.keyword, horn.horns);
+    let $hornClone = $photoTemplate.clone();
+    $hornClone.attr('class', `${hornObject.key}`);
+    $hornClone.find('h2').text(hornObject.title);
+    $hornClone.find('p').text(hornObject.description);
+    $hornClone.find('img').attr('src', hornObject.img);
+    $box.append($hornClone);
+    if (keyword.indexOf(hornObject.key) === -1) {
+      keyword.push(hornObject.key);
+      $dropbox.append(
+        $('<option></option>').text(hornObject.key)
 
-  // $(() => Horn.readJson());
+      );
+    }
+
+  });
 });
+
+
+
+
+let filterImage = () => {
+  $('select').on('change', function () {
+    let selected = this.value;
+    console.log('value', selected);
+    $('section').hide();
+    keyword.forEach(image => {
+      // console.log('image',image);
+      // console.log('keyword',image.key);
+      // console.log('select', selected);
+      if (selected === image) {
+        let keyword = selected;
+        // anything that selected has that class is shown
+        $('.' + keyword).show();
+      }
+    });
+  });
+};
+
+console.log(keyword);
+
+
