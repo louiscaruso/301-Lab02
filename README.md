@@ -3,5 +3,5 @@
 collaborators Deanna Johnson
 and Louis Caruso
 
-We tried to get this going but had some technical issues. 
-got the page scaffoleded out and the array logging in the console just not to the page. 
+Got everything working now.
+Used JavaScript, HTML, CSS and Jquery to create a page with an array of pictures. The user also has the option to filter and sort the images according to keywords.

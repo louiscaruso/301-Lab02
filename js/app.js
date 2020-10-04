@@ -17,28 +17,28 @@ function Horn(img, title, description, key, horns) {
 }
 let keyword = [];
 
+Horn.readJson = (pagenumber) => {
+  $.ajax(`./data/page-${pagenumber}.json`).then(data => {
+    
+    data.forEach(horn => {
+      let hornObject = new Horn(horn.image_url, horn.title, horn.description, horn.keyword, horn.horns);
+      let $hornClone = $photoTemplate.clone();
+      $hornClone.attr('class', `${hornObject.key}`);
+      $hornClone.find('h2').text(hornObject.title);
+      $hornClone.find('p').text(hornObject.description);
+      $hornClone.find('img').attr('src', hornObject.img);
+      $box.append($hornClone);
+      if (keyword.indexOf(hornObject.key) === -1) {
+        keyword.push(hornObject.key);
+        $dropbox.append(
+          $('<option></option>').text(hornObject.key)
 
-$.ajax('./data/page-1.json').then(data => {
-  filterImage();
-  data.forEach(horn => {
-    let hornObject = new Horn(horn.image_url, horn.title, horn.description, horn.keyword, horn.horns);
-    let $hornClone = $photoTemplate.clone();
-    $hornClone.attr('class', `${hornObject.key}`);
-    $hornClone.find('h2').text(hornObject.title);
-    $hornClone.find('p').text(hornObject.description);
-    $hornClone.find('img').attr('src', hornObject.img);
-    $box.append($hornClone);
-    if (keyword.indexOf(hornObject.key) === -1) {
-      keyword.push(hornObject.key);
-      $dropbox.append(
-        $('<option></option>').text(hornObject.key)
+        );
+      }
 
-      );
-    }
-
+    });
   });
-});
-
+};
 
 
 
@@ -62,4 +62,8 @@ let filterImage = () => {
 
 console.log(keyword);
 
+$(() => {
+  Horn.readJson(1);
+  filterImage();
+});
 
